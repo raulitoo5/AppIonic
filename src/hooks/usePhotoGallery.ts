@@ -12,7 +12,7 @@ export function usePhotoGallery() {
 
     const[photos, setPhotos] = useState<UserPhoto[]>([]);
 
-    // : Promise<UserPhoto> indica que lo que devuelve la funcion es una promesa de tipo UserPhoto.
+    // : Promise<UserPhoto> indica que l que devuelve la funcion es una promesa de tipo UserPhoto.
     // Una promesa es un objeto de JavaScript que representa si una operación asíncrona se ha realizado de forma correcta o incorrecta.
 
     const savePicture = async (photo: Photo, fileName: string): Promise<UserPhoto> => {
