@@ -51,31 +51,35 @@ setupIonicReact();
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/tab1" component={Tab1} />
-          <Route exact path="/tab2" component={Tab2} />
-          <Route path="/tab3" component={Tab3} />
-          <Route exact path="/movieDetails" component={PageMovieDetails} />
-          <Route exact path="/" component={Tab1} >
-            <Redirect to="/tab1" />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon aria-hidden="true" icon={film} />
-            <IonLabel>Películas</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon aria-hidden="true" icon={camera} />
-            <IonLabel>Photos</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon aria-hidden="true" icon={square} />
-            <IonLabel>Tab 3</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
+      <IonRouterOutlet>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route exact path="/tab1" component={Tab1} />
+            <Route exact path="/tab2" component={Tab2} />
+            <Route path="/tab3" component={Tab3} />
+            <Route exact path="/" component={Tab1} >
+              <Redirect to="/tab1" />
+            </Route>
+          </IonRouterOutlet>
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="tab1" href="/tab1">
+              <IonIcon aria-hidden="true" icon={film} />
+              <IonLabel>Películas</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab2" href="/tab2">
+              <IonIcon aria-hidden="true" icon={camera} />
+              <IonLabel>Photos</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab3" href="/tab3">
+              <IonIcon aria-hidden="true" icon={square} />
+              <IonLabel>Tab 3</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+          <Route exact path="/movieDetails/:id" component={PageMovieDetails} />
+
+        </IonTabs>
+      </IonRouterOutlet>
+
     </IonReactRouter>
   </IonApp>
 );
