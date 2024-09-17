@@ -1,0 +1,8 @@
+.link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.link:hover{
+    color: rgb(156, 154, 154);
+}

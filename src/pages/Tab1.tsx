@@ -1,22 +1,36 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonBadge } from '@ionic/react';
+import { Link } from 'react-router-dom';
+import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import './Tab1.css';
+import { useMovies } from '../hooks/useMovies';
 
 const Tab1: React.FC = () => {
+
+  const { movies } = useMovies();
+
+  console.log(movies);
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 1</IonTitle>
+          <IonTitle>Películas</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 1 page" />
+        <IonGrid>
+          <IonRow>
+            {movies && movies.map((movie, index) => (
+              <IonCol size="6" key={index} className='boton'>
+                <Link to={`/PageMovieDetails/${movie.id}`} className='link' >
+                  Título: {movie.title}
+                  <br />
+                  Género: {movie.genre}
+                </Link>
+              </IonCol>
+            ))}
+          </IonRow>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );
