@@ -1,15 +1,37 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonButtons, IonBackButton } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonButtons, IonBackButton, IonText } from '@ionic/react';
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import Axios from "axios";
 import './PageMovieDetails.css';
 import {movieDetails} from '../components/movieDetail';
 import { useParams } from 'react-router';
+import { Movie } from '../models/movieModel';
+
+
 
 const PageMovieDetails: React.FC = () => {
 
-    const {id} = useParams<{id:string}>();
-    console.log("el id de la priemra pagina es", id)
-    const {datos} = movieDetails();
+    const { idParam } = useParams<{ idParam:string }>();
+
+    console.log("el parametro es: ", idParam);
+   
+    const [datos, setDatos] = useState<Movie>();
+    const [id, setId] = useState<string>();
+ 
+/*     const {datos} = movieDetails(id);
+ */
+
+
+
+useEffect(() => {
+      Axios({
+          url: `https://freetestapi.com/api/v1/movies/${idParam}`,
+      }).then((response) => {
+          setDatos(response.data);
+      }).catch((error) => {
+          console.log(error);
+      });
+}, [id]);
 
     console.log("los datos de la pelicula son: ", datos);
     
@@ -18,10 +40,11 @@ const PageMovieDetails: React.FC = () => {
         <IonHeader>
           <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton />
+            <IonBackButton defaultHref='/tab1' />
           </IonButtons>
             {/** El operador ? o optinal chaining intenta acceder a la variable y en caso de ser
-             * null o undefined no causa error y solo retorna undefined
+             * null o undefined no causa error y solo retorna undefined. Esto lo hacemos para que si es 
+             * undefined o null no de errores
              */}
             <IonTitle className='tituloCentro'>Película: {datos?.title} </IonTitle>
           </IonToolbar>
@@ -32,13 +55,13 @@ const PageMovieDetails: React.FC = () => {
                     <IonCol size="6">
                         Año de lanzamiento: {datos?.year}
                         <br />
-                        Género: {datos?.genre}
+                        Géneros: <IonText> {datos?.genre.join(', ')}</IonText>
                         <br />
                         Puntuación: {datos?.rating}
                         <br />
                         Idioma: {datos?.language}
                         <br/>
-                        Actores: {datos?.actors}
+                        Actores: <IonText>{datos?.actors.join(', ')}</IonText>
                         <br />
                         <a href={datos?.website}> Página web </a>
                         <br />

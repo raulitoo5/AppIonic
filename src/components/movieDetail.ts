@@ -5,27 +5,27 @@ import { Capacitor } from '@capacitor/core';
 import { Movie } from "../models/movieModel";
 import { useParams } from "react-router";
 
-export function movieDetails() {
+export function movieDetails(id:string){
 
     const [datos, setDatos] = useState<Movie>();
-    const { id } = useParams<{ id: string }>();
-
 
     console.log("estoy en movieDetails con id", id);
 
-    if (id != '') {
+
         useEffect(() => {
-            Axios({
-                url: `https://freetestapi.com/api/v1/movies/${id}`,
-            }).then((response) => {
-                setDatos(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }, [id]);
-    } else {
-        console.log("id vacio", id);
-    }
+            setTimeout(() => {
+                Axios({
+                    url: `https://freetestapi.com/api/v1/movies/${id}`,
+                }).then((response) => {
+                    setDatos(response.data);
+                }).catch((error) => {
+                    console.log(error);
+                });
+            },3000)
+    
+        }, []);
+
+    
 
     return {
         datos

@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonBadge } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonText } from '@ionic/react';
 import { Link } from 'react-router-dom';
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import './Tab1.css';
@@ -21,9 +21,11 @@ const Tab1: React.FC = () => {
             {movies && movies.map((movie, index) => (
               <IonCol size="6" key={index} className='boton'>
                 <IonItem routerLink={`/movieDetails/${movie.id}`}>
-                  Título: {movie.title}
-                  <br />
-                  Género: {movie.genre}
+                  <IonLabel>
+                    Título: {movie.title}
+                    <br />
+                    Géneros: <IonText> {movie.genre.join(', ')}</IonText>
+                  </IonLabel>
                   </IonItem>
               </IonCol>
             ))}
