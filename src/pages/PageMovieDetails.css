@@ -10,3 +10,25 @@
 .tituloCentro{
     text-align: center;
 }
+
+.textoExplicativo{
+    display: inline;
+    font-weight: bold;
+}
+
+.contenedorColumna{
+    display: flex;
+    width: 100%;
+}
+
+.frame{
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+    height: 100vh;    
+}
+
+.poster{
+    display: flex;
+    justify-content: center;
+}

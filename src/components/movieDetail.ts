@@ -11,9 +11,7 @@ export function movieDetails(id:string){
 
     console.log("estoy en movieDetails con id", id);
 
-
         useEffect(() => {
-            setTimeout(() => {
                 Axios({
                     url: `https://freetestapi.com/api/v1/movies/${id}`,
                 }).then((response) => {
@@ -21,11 +19,8 @@ export function movieDetails(id:string){
                 }).catch((error) => {
                     console.log(error);
                 });
-            },3000)
-    
         }, []);
 
-    
 
     return {
         datos

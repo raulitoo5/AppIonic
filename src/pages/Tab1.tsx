@@ -20,7 +20,7 @@ const Tab1: React.FC = () => {
           <IonRow>
             {movies && movies.map((movie, index) => (
               <IonCol size="6" key={index} className='boton'>
-                <IonItem routerLink={`/movieDetails/${movie.id}`}>
+                <IonItem routerLink={`movieDetails/${movie.id}`}>
                   <IonLabel>
                     Título: {movie.title}
                     <br />

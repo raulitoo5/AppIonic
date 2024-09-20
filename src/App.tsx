@@ -34,13 +34,10 @@ setupIonicReact();
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      {/* Define las rutas que están fuera de las tabs */}
-
 
       {/* Define las rutas de las tabs */}
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/movieDetails/:idParam" component={PageMovieDetails} />
           <Route exact path="/tab1" component={Tab1} />
           <Route exact path="/tab2" component={Tab2} />
           <Route exact path="/tab3" component={Tab3} />
@@ -62,6 +59,10 @@ const App: React.FC = () => (
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
+
+      <Redirect exact path='' to="/tab1" />
+      <Route exact path="/movieDetails/:idParam" component={PageMovieDetails} />
+
     </IonReactRouter>
   </IonApp>
 );
