@@ -1,7 +1,7 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonButtons, IonBackButton, IonText, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButton } from '@ionic/react';
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import './PageMovieDetails.css';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Drivers, Storage } from '@ionic/storage';
 
@@ -18,7 +18,9 @@ const PageLoginExito: React.FC = () => {
   const [datos,setDatos] = useState<respuestaDatos>();
   const [store, setStore] = useState<Storage | null>(null);
   const [tokenR, setToken] = useState('');
+  const history = useHistory();
 
+  // Creación del almacenamiento local
   useEffect(() => {
     const crearStorage = async () => {
       const storeInstance = new Storage({
@@ -32,6 +34,7 @@ const PageLoginExito: React.FC = () => {
     crearStorage(); // Llama a la función para inicializar el almacenamiento
   }, []);
 
+  // Obtención del token
   useEffect(() => {
     const getToken = async() => {
       const tokenRecu = await store?.get('token');
@@ -41,6 +44,7 @@ const PageLoginExito: React.FC = () => {
     getToken();
   })
 
+  // Función para mostrar los datos de la persona
   const mostrarDatos = () => {
     /* providing token in bearer */
     fetch('https://dummyjson.com/auth/me', {
@@ -58,13 +62,18 @@ const PageLoginExito: React.FC = () => {
       .then(console.log);
   }
 
+    const cerrarSesion = async() => {
+      await store?.remove('token');
+      history.push('/Login');
+    }
+
   return (
     <IonPage className='pantallaPrincipal'>
       <IonHeader className='pantallaPrincipal'>
         <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/tab1" />
-          </IonButtons>
+          { !tokenR && <IonButtons slot="start" onClick={cerrarSesion}>
+            <IonBackButton defaultHref="/tab1"/>
+          </IonButtons>} 
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen className='pantallaPrincipal'>
@@ -74,6 +83,9 @@ const PageLoginExito: React.FC = () => {
               <IonText> Login exitoso</IonText>
               <IonButton onClick={mostrarDatos}>
                 Mostrar datos
+              </IonButton>
+              <IonButton onClick={cerrarSesion}>
+                Cerrar sesión
               </IonButton>
             </IonCol>
           </IonRow>

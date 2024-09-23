@@ -30,9 +30,6 @@ import '@ionic/react/css/palettes/dark.system.css';
 import './theme/variables.css';
 import PageRegistro from './pages/PageRegistro';
 import PageLoginExito from './pages/PageLoginExito';
-import { useEffect } from 'react';
-import { Storage, Drivers } from '@ionic/storage';
-
 
 setupIonicReact();
 

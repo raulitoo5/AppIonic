@@ -39,7 +39,18 @@ const Tab3: React.FC = () => {
     crearStorage(); // Llama a la función para inicializar el almacenamiento
   }, []);
 
-  
+  useEffect(() =>  {
+    const getToken = async() => {
+      const token = await store?.get('token');
+
+      if(token){
+        history.push('/LoginExito');
+      }
+    };
+
+    getToken();
+  })
+
 
   const login = async() => {
     fetch('https://dummyjson.com/auth/login', {
