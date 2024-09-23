@@ -32,7 +32,8 @@ const PageMovieDetails: React.FC = () => {
     }else{
       setUrlPoster(datos?.poster);
     }
-  }, []); // Solo se ejecutará cuando 'datos' cambie
+  }); // El useEffect sin dependencias se ejecuta cada vez que se renderiza en la página
+      // Si le pongo el array vacio [] como dependencia solo se va a ejecutar una vez, es decir, cuando se monte. Después en cada renderización no se va a volver a ejecutar.
 
   useEffect(() => {
     if (datos?.id === 1) {
@@ -40,13 +41,13 @@ const PageMovieDetails: React.FC = () => {
     }else{
       setUrlTrailer(datos?.trailer);
     }
-  },[])
+  })
 
   console.log("")
 
   return (
-    <IonPage>
-      <IonHeader>
+    <IonPage className='pantallaPrincipal'>
+      <IonHeader className='pantallaPrincipal'>
         <IonToolbar>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tab1" />
@@ -58,7 +59,7 @@ const PageMovieDetails: React.FC = () => {
           <IonTitle className='tituloCentro'>Película: {datos?.title} </IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen className='pantallaPrincipal'>
         <IonGrid>
           <IonRow>
             <IonCol size="6" className='contenedorColumna'>

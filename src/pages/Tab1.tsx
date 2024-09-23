@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import './Tab1.css';
 import { useMovies } from '../hooks/useMovies';
+import { useEffect } from 'react';
+import { Drivers, Storage } from '@ionic/storage';
 
 const Tab1: React.FC = () => {
 
@@ -26,7 +28,7 @@ const Tab1: React.FC = () => {
                     <br />
                     Géneros: <IonText> {movie.genre.join(', ')}</IonText>
                   </IonLabel>
-                  </IonItem>
+                </IonItem>
               </IonCol>
             ))}
           </IonRow>
