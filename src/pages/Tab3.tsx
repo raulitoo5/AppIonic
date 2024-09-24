@@ -5,52 +5,31 @@ import { body, compassSharp, logInOutline } from 'ionicons/icons';
 import { FormEventHandler, SetStateAction, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { OverlayEventDetail } from '@ionic/core';
-import { Drivers, Storage } from '@ionic/storage';
-
-/* // Creación del storage
-const storage = new Storage({
-  name: '__mydb',
-  driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
-});
-
-await storage.create(); */
+import { useJwt } from "react-jwt";
 
 const Tab3: React.FC = () => {
 
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
-  const [token, setToken] = useState();
   const history = useHistory();
   const modal = useRef<HTMLIonModalElement>(null);
   const input = useRef<HTMLIonInputElement>(null);
   const [correoRecuperacion, setCorreoRecuperacion] = useState('');
-  const [store, setStore] = useState<Storage | null>(null);
 
-  useEffect(() => {
-    const crearStorage = async () => {
-      const storeInstance = new Storage({
-        name: '__mydb',
-        driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage],
-      });
-      await storeInstance.create(); // Inicializa el almacenamiento
-      setStore(storeInstance); // Guarda la instancia del almacenamiento en el estado
-    };
+  const token = localStorage.getItem('token') || '';
+  const { decodedToken, isExpired } = useJwt(token);
 
-    crearStorage(); // Llama a la función para inicializar el almacenamiento
-  }, []);
-
+  // Aquí es donde verifico que el token no ha expirado
   useEffect(() =>  {
-    const getToken = async() => {
-      const token = await store?.get('token');
+    const getToken = () => {
 
-      if(token){
+      if(token && !isExpired){
         history.push('/LoginExito');
       }
     };
 
     getToken();
-  })
-
+  }, [])
 
   const login = async() => {
     fetch('https://dummyjson.com/auth/login', {
@@ -60,7 +39,7 @@ const Tab3: React.FC = () => {
 
         username: correo,
         password: contraseña,
-        expiresInMins: 30, // optional, defaults to 60
+        expiresInMins: 1, // optional, defaults to 60
       }),
       //credentials: 'include' // Include cookies (e.g., accessToken) in the request
     })
@@ -69,11 +48,9 @@ const Tab3: React.FC = () => {
         if (data.accessToken) {
           // Creamos el local Storage y guardamos la variable token
 
-          const tokenRecu = await store?.set('token', data.accessToken);
-
-          console.log("el token es recuperacion es: ", tokenRecu );
+          localStorage.setItem('token',data.accessToken);
+          console.log("la fecha de exp del token es: ", data.accessToken.exp);
           console.log('Inicio de sesión exitoso:', data);
-          setToken(data.token);
           history.push({
             pathname: '/LoginExito',
           });
@@ -82,6 +59,11 @@ const Tab3: React.FC = () => {
       .then(console.log);
   }
 
+
+  // Con este método lo que hacemos es indicar que pasa cuando pinchamos en confirmar.
+  // Usamos un CustumEvente que es un tipo de JavaScript para eventos personalizados
+  // OverlayEventDetail es un tipo que se usa en JavaScript que describe los detalles del evento
+  // cuando un modal se ha cerrado
   function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
     if (ev.detail.role === 'confirm') {
       setCorreoRecuperacion(ev.detail.data);

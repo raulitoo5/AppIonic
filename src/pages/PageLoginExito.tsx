@@ -3,7 +3,7 @@ import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import './PageMovieDetails.css';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Drivers, Storage } from '@ionic/storage';
+import { useJwt } from "react-jwt";
 
 /* const token = await storage.get('token');
  */
@@ -16,33 +16,37 @@ interface respuestaDatos{
 const PageLoginExito: React.FC = () => {
 
   const [datos,setDatos] = useState<respuestaDatos>();
-  const [store, setStore] = useState<Storage | null>(null);
-  const [tokenR, setToken] = useState('');
   const history = useHistory();
 
-  // Creación del almacenamiento local
+  const tokenR = localStorage.getItem('token') || '';
+
+  // Métodos de la biblioteca "react-jwt"
+  const { decodedToken, isExpired, reEvaluateToken } = useJwt(tokenR);
+
+  const [expirationDate, setExpirationDate] = useState<Date | null>(null);
+
+/*   useEffect(() => {
+    if (decodedToken && decodedToken) {
+      // Convertir el valor de `exp` (Unix timestamp en segundos) a milisegundos
+      const expTime = new Date(decodedToken.exp * 1000);
+      console.log("la fecha de experizacion es: " , expTime);
+      setExpirationDate(expTime);
+    }
+  }, [decodedToken]); */
+
   useEffect(() => {
-    const crearStorage = async () => {
-      const storeInstance = new Storage({
-        name: '__mydb',
-        driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage],
-      });
-      await storeInstance.create(); // Inicializa el almacenamiento
-      setStore(storeInstance); // Guarda la instancia del almacenamiento en el estado
-    };
+    const intervalId = setInterval(() => {
+      const nuevoToken = localStorage.getItem('token') || '';
+      reEvaluateToken(nuevoToken);
+      console.log("compruebo expiracion", isExpired);
+      if(isExpired){
+        console.log("ha expirado");
+        cerrarSesion();
+      }
+    }, 5000);
 
-    crearStorage(); // Llama a la función para inicializar el almacenamiento
-  }, []);
-
-  // Obtención del token
-  useEffect(() => {
-    const getToken = async() => {
-      const tokenRecu = await store?.get('token');
-      setToken(tokenRecu);
-    };
-
-    getToken();
-  })
+    return() => clearInterval(intervalId);
+  },[isExpired]);
 
   // Función para mostrar los datos de la persona
   const mostrarDatos = () => {
@@ -63,7 +67,7 @@ const PageLoginExito: React.FC = () => {
   }
 
     const cerrarSesion = async() => {
-      await store?.remove('token');
+      await localStorage.removeItem('token');
       history.push('/Login');
     }
 
