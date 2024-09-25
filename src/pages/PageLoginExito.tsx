@@ -4,6 +4,7 @@ import './PageMovieDetails.css';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useJwt } from "react-jwt";
+import apiClient from '../axiosConfig';
 
 /* const token = await storage.get('token');
  */
@@ -25,32 +26,25 @@ const PageLoginExito: React.FC = () => {
 
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
-/*   useEffect(() => {
-    if (decodedToken && decodedToken) {
-      // Convertir el valor de `exp` (Unix timestamp en segundos) a milisegundos
-      const expTime = new Date(decodedToken.exp * 1000);
-      console.log("la fecha de experizacion es: " , expTime);
-      setExpirationDate(expTime);
-    }
-  }, [decodedToken]); */
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       const nuevoToken = localStorage.getItem('token') || '';
       reEvaluateToken(nuevoToken);
       console.log("compruebo expiracion", isExpired);
-      if(isExpired){
-        console.log("ha expirado");
-        cerrarSesion();
-      }
     }, 5000);
 
     return() => clearInterval(intervalId);
+  },[]);
+
+  useEffect(() => {
+    if(isExpired){
+      cerrarSesion();
+    }
   },[isExpired]);
 
   // Función para mostrar los datos de la persona
-  const mostrarDatos = () => {
-    /* providing token in bearer */
+  
+ /*   const mostrarDatos = () => {
     fetch('https://dummyjson.com/auth/me', {
       method: 'GET',
       headers: {
@@ -64,8 +58,20 @@ const PageLoginExito: React.FC = () => {
         console.log("los datos son: ", data);
       })
       .then(console.log);
-  }
+  }  */
 
+  const mostrarDatos = async() => {
+    try{
+      const respuesta = await apiClient.get('auth/me');
+
+      if(respuesta){
+        setDatos(respuesta.data);
+      }
+    } catch(error){
+      console.log("Error en mostar datos de PageLoginExito: ", error);
+    }
+  } 
+ 
     const cerrarSesion = async() => {
       await localStorage.removeItem('token');
       history.push('/Login');

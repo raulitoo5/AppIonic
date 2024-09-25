@@ -6,6 +6,7 @@ import { FormEventHandler, SetStateAction, useEffect, useRef, useState } from 'r
 import { useHistory } from 'react-router-dom';
 import { OverlayEventDetail } from '@ionic/core';
 import { useJwt } from "react-jwt";
+import apiClient from '../axiosConfig';
 
 const Tab3: React.FC = () => {
 
@@ -20,10 +21,10 @@ const Tab3: React.FC = () => {
   const { decodedToken, isExpired } = useJwt(token);
 
   // Aquí es donde verifico que el token no ha expirado
-  useEffect(() =>  {
+  useEffect(() => {
     const getToken = () => {
 
-      if(token && !isExpired){
+      if (token && !isExpired) {
         history.push('/LoginExito');
       }
     };
@@ -31,34 +32,58 @@ const Tab3: React.FC = () => {
     getToken();
   }, [])
 
-  const login = async() => {
-    fetch('https://dummyjson.com/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+  /*   const login = async() => {
+      fetch('https://dummyjson.com/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+  
+          username: correo,
+          password: contraseña,
+          expiresInMins: 1, // optional, defaults to 60
+        }),
+        //credentials: 'include' // Include cookies (e.g., accessToken) in the request
+      })
+        .then(res => res.json())
+        .then(async data => {
+          if (data.accessToken) {
+            // Creamos el local Storage y guardamos la variable token
+  
+            localStorage.setItem('token',data.accessToken);
+            console.log("la fecha de exp del token es: ", data.accessToken.exp);
+            console.log('Inicio de sesión exitoso:', data);
+            history.push({
+              pathname: '/LoginExito',
+            });
+          }
+        })
+        .then(console.log);
+    } */
 
+        
+  // Login usando el interceptor
+  const login = async () => {
+    try {
+      const respuesta = await apiClient.post('/auth/login', {
         username: correo,
         password: contraseña,
         expiresInMins: 1, // optional, defaults to 60
-      }),
-      //credentials: 'include' // Include cookies (e.g., accessToken) in the request
-    })
-      .then(res => res.json())
-      .then(async data => {
-        if (data.accessToken) {
-          // Creamos el local Storage y guardamos la variable token
+      });
 
-          localStorage.setItem('token',data.accessToken);
-          console.log("la fecha de exp del token es: ", data.accessToken.exp);
-          console.log('Inicio de sesión exitoso:', data);
-          history.push({
-            pathname: '/LoginExito',
-          });
-        }
-      })
-      .then(console.log);
+      if (respuesta.data.accessToken) {
+        // Creamos el local Storage y guardamos la variable token
+
+        localStorage.setItem('token', respuesta.data.accessToken);
+        console.log("la fecha de exp del token es: ", respuesta.data.accessToken.exp);
+        console.log('Inicio de sesión exitoso:', respuesta.data);
+        history.push({
+          pathname: '/LoginExito',
+        });
+      }
+    } catch (error) {
+      console.log('Error al iniciar sesión', error);
+    }
   }
-
 
   // Con este método lo que hacemos es indicar que pasa cuando pinchamos en confirmar.
   // Usamos un CustumEvente que es un tipo de JavaScript para eventos personalizados
