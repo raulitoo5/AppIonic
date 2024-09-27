@@ -5,11 +5,9 @@ import { Capacitor } from '@capacitor/core';
 import { Movie } from "../models/movieModel";
 import { useParams } from "react-router";
 
-export function movieDetails(id:string){
+export function useMovieDetails(id:string){
 
     const [datos, setDatos] = useState<Movie>();
-
-    console.log("estoy en movieDetails con id", id);
 
         useEffect(() => {
                 Axios({
@@ -20,7 +18,6 @@ export function movieDetails(id:string){
                     console.log(error);
                 });
         }, []);
-
 
     return {
         datos
